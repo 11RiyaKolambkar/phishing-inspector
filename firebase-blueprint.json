@@ -1,0 +1,91 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "Information about an authenticated user",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "role": { "type": "string", "enum": ["user", "admin"] },
+        "fcmToken": { "type": "string" },
+        "notificationsEnabled": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "lastLoginAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "ScanAudit": {
+      "title": "Scan Audit Report",
+      "description": "Persistent record of an email, URL, or chat message scan",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "userEmail": { "type": "string" },
+        "mode": { "type": "string", "enum": ["email", "url", "message"] },
+        "scamThreatIndex": { "type": "integer" },
+        "riskLevel": { "type": "string", "enum": ["SAFE", "LOW", "MEDIUM", "HIGH", "CRITICAL"] },
+        "detectedCompany": { "type": "string" },
+        "summary": { "type": "string" },
+        "redFlagsCount": { "type": "integer" },
+        "sanitizedInput": { "type": "object" },
+        "analysisTimestamp": { "type": "string", "format": "date-time" },
+        "isFlaggedByUser": { "type": "boolean" },
+        "notes": { "type": "string" }
+      },
+      "required": ["userId", "mode", "scamThreatIndex", "riskLevel", "analysisTimestamp"]
+    },
+    "SecurityAlert": {
+      "title": "Critical Security Alert",
+      "description": "In-app and push notification alert when a Critical threat is identified",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "scanId": { "type": "string" },
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "threatScore": { "type": "integer" },
+        "riskLevel": { "type": "string" },
+        "mode": { "type": "string" },
+        "company": { "type": "string" },
+        "read": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "title", "threatScore", "riskLevel", "read", "createdAt"]
+    },
+    "ThreatIndicator": {
+      "title": "Threat Intelligence Indicator",
+      "description": "Known malicious domains, recruiter impersonator emails, or fraudulent phone numbers",
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "enum": ["domain", "email", "phone", "crypto_wallet"] },
+        "value": { "type": "string" },
+        "confidence": { "type": "integer" },
+        "reportedBy": { "type": "string" },
+        "reportedAt": { "type": "string", "format": "date-time" },
+        "category": { "type": "string" }
+      },
+      "required": ["type", "value", "reportedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile with role, notification settings, and authentication metadata"
+    },
+    "/users/{userId}/scans/{scanId}": {
+      "schema": "ScanAudit",
+      "description": "User's personal scan audit history"
+    },
+    "/users/{userId}/alerts/{alertId}": {
+      "schema": "SecurityAlert",
+      "description": "User's critical security alerts and notification feed"
+    },
+    "/threat_intel/{indicatorId}": {
+      "schema": "ThreatIndicator",
+      "description": "Global crowdsourced threat indicators and malicious pattern database"
+    }
+  }
+}

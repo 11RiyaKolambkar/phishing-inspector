@@ -1,0 +1,6 @@
+{
+  "name": "Phishing Inspector",
+  "description": "Verify job offers across emails, application URLs, and chat messages with Gemini 3.8 Flash, featuring real-time Global Threat Trends powered by Google Search Grounding to detect scam red flags and recruitment phishing.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
